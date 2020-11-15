@@ -6,8 +6,9 @@ namespace VFX.InputSystem
     public class UserInput : MonoBehaviour
     {
         [SerializeField]
-        protected UnityKeybinds keybinds;
+        protected Keybinds keybinds;
 
+        [Space]
         [SerializeField]
         protected GameEvent onLeftClick;
         [SerializeField]
@@ -15,6 +16,7 @@ namespace VFX.InputSystem
         [SerializeField]
         protected GameEventRaycastHit onMouseHover;
 
+        [Space]
         [SerializeField]
         protected GameEvent onInteract;
         [SerializeField]
@@ -22,6 +24,7 @@ namespace VFX.InputSystem
         [SerializeField]
         protected GameEvent onGenerate;
 
+        [Space]
         protected Camera mainCamera;
         [SerializeField]
         protected LayerMask mask;
@@ -46,15 +49,20 @@ namespace VFX.InputSystem
 
         protected virtual void Update()
         {
-            LeftClick();
-            RightClick();
+            // Check needed since the ScriptableObject is somehow becoming
+            // null for one frame and then a normal reference the second.
+            if (keybinds)
+            {
+                LeftClick();
+                RightClick();
 
-            Interact();
-            Restart();
-            Generate();
+                Interact();
+                Restart();
+                Generate();
 
-            RaycastFromCamera();
-            DrawDebugRay(hit, ray);
+                RaycastFromCamera();
+                DrawDebugRay(hit, ray);
+            }
         }
 
         private void DrawDebugRay(RaycastHit hit, Ray ray)

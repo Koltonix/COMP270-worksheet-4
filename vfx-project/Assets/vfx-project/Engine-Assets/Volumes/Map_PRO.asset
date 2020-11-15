@@ -16,13 +16,13 @@ MonoBehaviour:
   m_AdvancedMode: 0
   lift:
     m_OverrideState: 1
-    m_Value: {x: 0.9849783, y: 1, z: 0.9439506, w: 0}
+    m_Value: {x: 1, y: 0.99694663, z: 0.8651726, w: 0}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 0.99901646, y: 1, z: 0.9828194, w: 0}
+    m_Value: {x: 1, y: 0.9982913, z: 0.93912244, w: 0}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.99780065, z: 0.98079133, w: 0}
+    m_Value: {x: 1, y: 0.995822, z: 0.9838465, w: 0}
 --- !u!114 &-5832905602854094548
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -39,7 +39,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   temperature:
     m_OverrideState: 1
-    m_Value: 9
+    m_Value: 22
     min: -100
     max: 100
   tint:
@@ -83,6 +83,23 @@ MonoBehaviour:
   rounded:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &-3070693916368693106
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,7 +110,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: Development_PRO
+  m_Name: Map_PRO
   m_EditorClassIdentifier: 
   components:
   - {fileID: -3361701355475379477}
@@ -101,6 +118,7 @@ MonoBehaviour:
   - {fileID: 7555606251949198345}
   - {fileID: -7237849112698845902}
   - {fileID: 1061414694985231698}
+  - {fileID: -3070693916368693106}
 --- !u!114 &1061414694985231698
 MonoBehaviour:
   m_ObjectHideFlags: 3

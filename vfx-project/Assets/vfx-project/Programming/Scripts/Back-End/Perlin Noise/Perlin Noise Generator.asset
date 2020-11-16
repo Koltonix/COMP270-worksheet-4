@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4195b0854b12a3c4383ea0b129768e74, type: 3}
   m_Name: Perlin Noise Generator
   m_EditorClassIdentifier: 
-  resolution: {x: 64, y: 64}
+  resolution: {x: 16, y: 16}
   seed: 0
   scale: 20

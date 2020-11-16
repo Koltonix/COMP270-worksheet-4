@@ -72,7 +72,8 @@ namespace VFX.Noise
         // Source: https://answers.unity.com/questions/1331297/how-to-save-a-texture2d-into-a-png.html
         public void SaveTexture2D(Texture2D texture)
         {
-            string filePath = Application.dataPath + "/vfx-project/Engine-Assets/Maps/PerlinNoise" + seed + ".PNG";
+            string fileInfo = string.Format("[{0}][{1}]({2}){3}", resolution.x, resolution.y, scale, seed);
+            string filePath = Application.dataPath + "/vfx-project/Engine-Assets/Maps/PerlinNoise" + fileInfo + ".PNG";
 
             byte[] bytes = texture.EncodeToPNG();
             System.IO.File.WriteAllBytes(filePath, bytes);

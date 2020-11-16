@@ -1,31 +1,25 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 namespace VFX.Noise
 {
-    public class PerlinNoiseGenerator : MonoBehaviour
+    [CreateAssetMenu(fileName = "Perlin Noise Generator", menuName = "ScriptableObjects/Tools/PerlinNoiseGenerator")]
+    public class PerlinNoiseGenerator : ScriptableObject
     {
         [SerializeField]
         private Vector2Int resolution = new Vector2Int(64, 64);
         [SerializeField]
+        [Range(0, 999999)]
         private int seed = 0000;
         [SerializeField]
         private float scale = 20.0f;
 
-        public RawImage debugImage = null;
-
         public void RandomiseSeed() => seed = Random.Range(0, 999999);
 
-        private void Start()
-        {
-            RandomiseSeed();
-            
-        }
-        private void Update()
+        public void CreateNewPerlinNoiseTexture()
         {
             Texture2D texture = GetRandomPerlinNoiseTexture();
             texture = MaxContrast(texture);
-            debugImage.texture = texture;
+            SaveTexture2D(texture);
         }
 
         // Source: https://www.youtube.com/watch?v=bG0uEXV6aHQ&t=563s
@@ -73,6 +67,17 @@ namespace VFX.Noise
 
             float sample = Mathf.PerlinNoise(seed + xCoord, seed + yCoord);
             return new Color(sample, sample, sample);
+        }
+
+        // Source: https://answers.unity.com/questions/1331297/how-to-save-a-texture2d-into-a-png.html
+        public void SaveTexture2D(Texture2D texture)
+        {
+            string filePath = Application.dataPath + "/vfx-project/Engine-Assets/Maps/PerlinNoise" + seed + ".PNG";
+
+            byte[] bytes = texture.EncodeToPNG();
+            System.IO.File.WriteAllBytes(filePath, bytes);
+
+            Debug.Log("Saved at: " + filePath);
         }
     }
 }

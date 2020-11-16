@@ -12,13 +12,15 @@ namespace VFX.Noise
         private int seed = 0000;
         [SerializeField]
         private float scale = 20.0f;
+        [SerializeField]
+        private bool enableContrast = false;
 
         public void RandomiseSeed() => seed = Random.Range(0, 999999);
 
         public void CreateNewPerlinNoiseTexture()
         {
             Texture2D texture = GetRandomPerlinNoiseTexture();
-            texture = MaxContrast(texture);
+            if (enableContrast) texture = MaxContrast(texture);
             SaveTexture2D(texture);
         }
 
@@ -77,6 +79,8 @@ namespace VFX.Noise
 
             byte[] bytes = texture.EncodeToPNG();
             System.IO.File.WriteAllBytes(filePath, bytes);
+ 
+           //Resources.Load(filePath);
 
             Debug.Log("Saved at: " + filePath);
         }

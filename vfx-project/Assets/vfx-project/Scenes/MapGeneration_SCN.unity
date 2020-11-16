@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 1322251122}
   - component: {fileID: 1322251121}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: MapFromImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -361,7 +361,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileXSize: 1
   tileYSize: 1
-  noiseMap: {fileID: 2800000, guid: a4a56b175c18d054a9fffa0bb8b596d3, type: 3}
+  yHeightScalar: 1
+  noiseMap: {fileID: 2800000, guid: 3c6356b7819795747b9f2e1b568906c4, type: 3}
 --- !u!4 &1322251122
 Transform:
   m_ObjectHideFlags: 0

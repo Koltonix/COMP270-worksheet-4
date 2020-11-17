@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace VFX.Mesh
+namespace VFX.MeshGeneration
 {
     public class MapFromImage : MonoBehaviour
     {
@@ -19,7 +20,8 @@ namespace VFX.Mesh
 
         [Header("Mesh GameObject")]
         private GameObject meshObject = null;
-        private MeshFilter mesh = null;
+        private MeshFilter meshFilter = null;
+        private Mesh mesh = null;
 
         [Header("Vertices & Triangles")]
         private Vector3[] vertices;
@@ -28,9 +30,70 @@ namespace VFX.Mesh
         private void Start()
         {
             meshObject = new GameObject("Generated Map");
-            mesh = meshObject.AddComponent<MeshFilter>();
+            meshObject.AddComponent<MeshRenderer>();
+
+            meshFilter = meshObject.AddComponent<MeshFilter>();
+            mesh = new Mesh();
 
             tilePositions = GetPositionsFromTexture(noiseMap);
+
+            CreateVerticesAndTriangles();
+
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+
+            mesh.RecalculateNormals();
+            meshFilter.mesh = mesh;
+        }
+
+        // Split Later
+        private void CreateVerticesAndTriangles()
+        {
+            int width = noiseMap.width;
+            int height = noiseMap.height;
+
+            vertices = new Vector3[tilePositions.Length];
+            triangles = new int[width * 6];
+
+            //for (int i = 0, y = 0; y < height; y++)
+            //{
+            //    for (int x = 0; x < width; x++, i++)
+            //    {
+            //        Vector3 centrePos = tilePositions[x, y];
+            //        Vector3[] corners = GetVerticesFromCentre(centrePos);
+            //        // 013 312
+
+            //        // Left Triangle Vertices
+            //        vertices[vertices.Length - 1] = corners[0];
+            //        vertices[vertices.Length - 1] = corners[1];
+            //        vertices[vertices.Length - 1] = corners[3];
+
+            //        // Right Triangle Vertices
+            //        vertices[vertices.Length - 1] = corners[3];
+            //        vertices[vertices.Length - 1] = corners[1];
+            //        vertices[vertices.Length - 1] = corners[2];
+            //    }
+            //}
+
+           
+            foreach(Vector3 centrePos in tilePositions)
+            {
+                Vector3[] corners = GetVerticesFromCentre(centrePos);
+                for (int i = 0; i < corners.Length; i++)
+                    vertices[vertices.Length - 1] = corners[i];
+            }
+
+            for (int ti = 0, vi = 0, y = 0; y < height; y++, vi++)
+            {
+                for (int x = 0; x < width; x++, ti += 6, vi++)
+                {
+                    triangles[ti] = vi;
+                    triangles[ti + 3] = triangles[ti + 2] = vi + 1;
+                    triangles[ti + 4] = triangles[ti + 1] = vi + width + 1;
+                    triangles[ti + 5] = vi + width + 2;
+
+                }
+            }
         }
 
         private Vector3[,] GetPositionsFromTexture(Texture2D texture)
@@ -67,11 +130,11 @@ namespace VFX.Mesh
             float halfXSize = tileXSize * .5f;
             float halfYSize = tileYSize * .5f;
 
-            // Going clockwise from the top left point
-            corners[0] = pos + new Vector3(-halfXSize, 0.0f, halfYSize); // Top Left
-            corners[1] = pos + new Vector3(halfXSize, 0.0f, halfYSize); // Top Right
-            corners[2] = pos + new Vector3(halfXSize, 0.0f, -halfYSize); // Bottom Right
-            corners[3] = pos + new Vector3(-halfXSize, 0.0f, -halfYSize); // Bottom Left
+            // Going clockwise from the bottom left point
+            corners[0] = pos + new Vector3(-halfXSize, 0.0f, -halfYSize); // Bottom Left
+            corners[1] = pos + new Vector3(-halfXSize, 0.0f, halfYSize); // Top Left
+            corners[2] = pos + new Vector3(halfXSize, 0.0f, halfYSize); // Top Right
+            corners[3] = pos + new Vector3(halfXSize, 0.0f, -halfYSize); // Bottom Right
 
             return corners;
         }

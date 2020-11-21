@@ -13,7 +13,7 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private float yHeightScalar = 1.0f;
         private Vector3[,] tilePositions = null;
-        private Vector3[] positions;
+        private List<Vector3> positions = new List<Vector3>();
 
         [Header("Noise")]
         [SerializeField]
@@ -41,12 +41,14 @@ namespace VFX.MeshGeneration
             meshFilter.mesh = mesh;
 
             tilePositions = GetPositionsFromTexture(noiseMap);
-            vertices = new Vector3[tilePositions.Length];
+            vertices = GetVerticesFromTilePositions(tilePositions);
 
+            positions = new List<Vector3>(vertices);
+            Debug.Log(positions.Count);
             CreateVerticesAndTriangles();
 
-           mesh.vertices = vertices;
-           mesh.triangles = triangles;
+            mesh.vertices = positions.ToArray();
+            mesh.triangles = triangles;
 
             //mesh.RecalculateNormals();
             
@@ -55,26 +57,24 @@ namespace VFX.MeshGeneration
         // Source: https://catlikecoding.com/unity/tutorials/procedural-grid/
         private void CreateVerticesAndTriangles()
         {
-            int width = noiseMap.width;
-            int height = noiseMap.height;
+            int width = noiseMap.width * 4;
+            int height = noiseMap.height * 4;
 
             Vector3 maxWorldSize = new Vector3(width * tileXSize, 0.0f, height * tileYSize);
 
             vertices = new Vector3[(width + 1) * (height + 1)];
             triangles = new int[height * width * 6];
 
-            for (int i = 0, y = 0; y <= height; y++)
+            for (int i = 0, y = 0; y <=height; y++)
             {
                 for (int x = 0; x <= width; x++, i++)
                 {
-                    // Setting the initial position taking into account the tile size
-                    Vector3 position = new Vector3(x * tileXSize, GetYHeight(x, y, noiseMap), y * tileYSize);
+                    if (x < tilePositions.GetLength(0) && y < tilePositions.GetLength(1))
+                    {
+                        Vector3 centre = tilePositions[x, y];
+                        Vector3[] corners = GetVerticesFromCentre(centre);
+                    }
 
-                    // Offsetting the position by its max size - a tile halved
-                    // This makes (0, 0, 0) the world centre of the object
-                    position -= (maxWorldSize - new Vector3(tileXSize, 0.0f, tileYSize)) * .5f;
-                    vertices[i] = position;
-        
                 }
             }
 
@@ -93,31 +93,32 @@ namespace VFX.MeshGeneration
             Debug.Log(vertices.Length + " : " + triangles.Length);
         }
 
-        private Vector3[,] GetPositionsFromTexture(Texture2D texture)
+        private Vector3[] GetVerticesFromTilePositions(Vector3[,] tiles)
         {
-            Vector3 maxWorldSize = new Vector3(texture.width * tileXSize, 0.0f, texture.height * tileYSize);
-            Vector3[,] positions = new Vector3[texture.width, texture.height];
-            for (int x = 0; x < texture.width; x++)
+            Stack<Vector3> vertices = new Stack<Vector3>();
+            for (int y = 0; y <= tiles.GetLength(1); y++)
             {
-                for (int y = 0; y < texture.height; y++)
+                for (int x = 0; x < tiles.GetLength(0); x++)
                 {
-                    // Setting the initial position taking into account the tile size
-                    Vector3 position = new Vector3(x * tileXSize, GetYHeight(x, y, texture), y * tileYSize);
+                    // Extra Row for the Top of the final row
+                    if (y == tiles.GetLength(1))
+                    {
+                        Vector3[] corners = GetVerticesFromCentre(tiles[x, y - 1]);
+                        vertices.Push(corners[1]);
+                        vertices.Push(corners[2]);
+                    }
 
-                    // Offsetting the position by its max size - a tile halved
-                    // This makes (0, 0, 0) the world centre of the object
-                    position -= (maxWorldSize - new Vector3(tileXSize, 0.0f, tileYSize)) * .5f;
-                    positions[x, y] = position;
+                    // Rest of the rest
+                    else
+                    {
+                        Vector3[] corners = GetVerticesFromCentre(tiles[x, y]);
+                        vertices.Push(corners[0]);
+                        vertices.Push(corners[3]);
+                    }
                 }
             }
 
-            return positions;
-        }
-
-        private float GetYHeight(int x, int y, Texture2D texture)
-        {
-            Color colour = texture.GetPixel(x, y);
-            return colour.r * yHeightScalar;
+            return vertices.ToArray();
         }
 
         // This is essentially the bounding box of the position
@@ -136,6 +137,35 @@ namespace VFX.MeshGeneration
             return corners;
         }
 
+        #region Noise Map Reading
+        private Vector3[,] GetPositionsFromTexture(Texture2D texture)
+        {
+            Vector3 maxWorldSize = new Vector3(texture.width * tileXSize, 0.0f, texture.height * tileYSize);
+            Vector3[,] positions = new Vector3[texture.width, texture.height];
+            for (int y = 0; y < texture.height; y++)
+            {
+                for (int x = 0; x < texture.width; x++)
+                {
+                    // Setting the initial position taking into account the tile size
+                    Vector3 position = new Vector3(x * tileXSize, GetYHeight(x, y, texture), y * tileYSize);
+
+                    // Offsetting the position by its max size - a tile halved
+                    // This makes (0, 0, 0) the world centre of the object
+                    position -= (maxWorldSize - new Vector3(tileXSize, 0.0f, tileYSize)) * .5f;
+                    positions[x, y] = position;
+                }
+            }
+            return positions;
+        }
+
+        private float GetYHeight(int x, int y, Texture2D texture)
+        {
+            Color colour = texture.GetPixel(x, y);
+            return colour.r * yHeightScalar;
+        }
+        #endregion
+
+        #region Debug
         private void OnDrawGizmos()
         {
             if (tilePositions != null && drawDebug)
@@ -154,7 +184,17 @@ namespace VFX.MeshGeneration
                     }
                 }
             }
+
+            if (positions != null)
+            {
+                foreach (Vector3 pos in positions)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(pos, .1f);
+                }
+            }
         }
+        #endregion
 
 
     }

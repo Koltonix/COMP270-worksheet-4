@@ -13,6 +13,7 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private float yHeightScalar = 1.0f;
         private Vector3[,] tilePositions = null;
+        private Vector3[] positions;
 
         [Header("Noise")]
         [SerializeField]
@@ -27,6 +28,9 @@ namespace VFX.MeshGeneration
         private Vector3[] vertices;
         private int[] triangles;
 
+        [SerializeField]
+        private bool drawDebug = false;
+
         private void Start()
         {
             meshObject = new GameObject("Generated Map");
@@ -34,53 +38,44 @@ namespace VFX.MeshGeneration
 
             meshFilter = meshObject.AddComponent<MeshFilter>();
             mesh = new Mesh();
+            meshFilter.mesh = mesh;
 
             tilePositions = GetPositionsFromTexture(noiseMap);
+            vertices = new Vector3[tilePositions.Length];
 
             CreateVerticesAndTriangles();
 
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
+           mesh.vertices = vertices;
+           mesh.triangles = triangles;
 
-            mesh.RecalculateNormals();
-            meshFilter.mesh = mesh;
+            //mesh.RecalculateNormals();
+            
         }
 
-        // Split Later
+        // Source: https://catlikecoding.com/unity/tutorials/procedural-grid/
         private void CreateVerticesAndTriangles()
         {
             int width = noiseMap.width;
             int height = noiseMap.height;
 
-            vertices = new Vector3[tilePositions.Length];
-            triangles = new int[width * 6];
+            Vector3 maxWorldSize = new Vector3(width * tileXSize, 0.0f, height * tileYSize);
 
-            //for (int i = 0, y = 0; y < height; y++)
-            //{
-            //    for (int x = 0; x < width; x++, i++)
-            //    {
-            //        Vector3 centrePos = tilePositions[x, y];
-            //        Vector3[] corners = GetVerticesFromCentre(centrePos);
-            //        // 013 312
+            vertices = new Vector3[(width + 1) * (height + 1)];
+            triangles = new int[height * width * 6];
 
-            //        // Left Triangle Vertices
-            //        vertices[vertices.Length - 1] = corners[0];
-            //        vertices[vertices.Length - 1] = corners[1];
-            //        vertices[vertices.Length - 1] = corners[3];
-
-            //        // Right Triangle Vertices
-            //        vertices[vertices.Length - 1] = corners[3];
-            //        vertices[vertices.Length - 1] = corners[1];
-            //        vertices[vertices.Length - 1] = corners[2];
-            //    }
-            //}
-
-           
-            foreach(Vector3 centrePos in tilePositions)
+            for (int i = 0, y = 0; y <= height; y++)
             {
-                Vector3[] corners = GetVerticesFromCentre(centrePos);
-                for (int i = 0; i < corners.Length; i++)
-                    vertices[vertices.Length - 1] = corners[i];
+                for (int x = 0; x <= width; x++, i++)
+                {
+                    // Setting the initial position taking into account the tile size
+                    Vector3 position = new Vector3(x * tileXSize, GetYHeight(x, y, noiseMap), y * tileYSize);
+
+                    // Offsetting the position by its max size - a tile halved
+                    // This makes (0, 0, 0) the world centre of the object
+                    position -= (maxWorldSize - new Vector3(tileXSize, 0.0f, tileYSize)) * .5f;
+                    vertices[i] = position;
+        
+                }
             }
 
             for (int ti = 0, vi = 0, y = 0; y < height; y++, vi++)
@@ -91,9 +86,11 @@ namespace VFX.MeshGeneration
                     triangles[ti + 3] = triangles[ti + 2] = vi + 1;
                     triangles[ti + 4] = triangles[ti + 1] = vi + width + 1;
                     triangles[ti + 5] = vi + width + 2;
-
                 }
             }
+            
+
+            Debug.Log(vertices.Length + " : " + triangles.Length);
         }
 
         private Vector3[,] GetPositionsFromTexture(Texture2D texture)
@@ -141,7 +138,7 @@ namespace VFX.MeshGeneration
 
         private void OnDrawGizmos()
         {
-            if (tilePositions != null)
+            if (tilePositions != null && drawDebug)
             {
                 foreach (Vector3 pos in tilePositions)
                 {

@@ -363,6 +363,7 @@ MonoBehaviour:
   tileYSize: 1
   yHeightScalar: 1
   noiseMap: {fileID: 2800000, guid: 3c6356b7819795747b9f2e1b568906c4, type: 3}
+  drawDebug: 0
 --- !u!4 &1322251122
 Transform:
   m_ObjectHideFlags: 0
@@ -395,7 +396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1376062904
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -546,7 +547,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1549171338
 BoxCollider:
   m_ObjectHideFlags: 0

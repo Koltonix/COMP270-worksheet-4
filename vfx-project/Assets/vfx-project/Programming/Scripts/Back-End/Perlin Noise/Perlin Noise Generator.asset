@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Perlin Noise Generator
   m_EditorClassIdentifier: 
   resolution: {x: 16, y: 16}
-  seed: 795042
-  scale: 20
+  seed: 889350
+  scale: 1
   enableContrast: 0

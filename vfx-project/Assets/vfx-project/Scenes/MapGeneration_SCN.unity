@@ -361,8 +361,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileXSize: 1
   tileYSize: 1
-  yHeightScalar: 1
-  noiseMap: {fileID: 2800000, guid: 3c6356b7819795747b9f2e1b568906c4, type: 3}
+  yHeightScalar: 10
+  noiseMap: {fileID: 2800000, guid: 1e0b9bec086b7164086f36365a2a3086, type: 3}
   drawDebug: 0
 --- !u!4 &1322251122
 Transform:

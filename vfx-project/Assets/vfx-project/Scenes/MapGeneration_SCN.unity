@@ -362,7 +362,9 @@ MonoBehaviour:
   tileXSize: 1
   tileYSize: 1
   yHeightScalar: 10
+  roundedYPos: 1
   noiseMap: {fileID: 2800000, guid: 1e0b9bec086b7164086f36365a2a3086, type: 3}
+  tileMaterial: {fileID: 2100000, guid: a6f00e1c5c1198243863142341bed685, type: 2}
   drawDebug: 0
 --- !u!4 &1322251122
 Transform:
@@ -793,7 +795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782452392}
   m_LocalRotation: {x: 0.23911765, y: 0.3696438, z: -0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: -30, y: 25, z: -30}
+  m_LocalPosition: {x: -30, y: 30, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

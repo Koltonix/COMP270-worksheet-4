@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace VFX.MeshGeneration
 {
+    public class Quad
+    {
+        public Vector3[] vertices = new Vector3[4];
+        public int[] triangles = new int[6];
+    }
+
+
     public class MapToData : MonoBehaviour
     {
         [Header("Tile Options")]
@@ -69,9 +76,9 @@ namespace VFX.MeshGeneration
             int xSize = tilePositions.GetLength(0);
             int ySize = tilePosition.GetLength(1);
 
-            Vector3[] vertices = new Vector3[xSize * ySize * 4 * 3];
-            Vector3[] normals = new Vector3[vertices.Length];
-            int[] triangles = new int[xSize * ySize * 6 * 3];
+            List<Vector3> vertices = new List<Vector3>();
+            //Vector3[] normals = new Vector3[vertices.Length];
+            List<int> triangles = new List<int>();
 
             int v = 0;
             int t = 0;
@@ -82,60 +89,103 @@ namespace VFX.MeshGeneration
                 {
 
                     Vector3[] corners = GetVerticesFromCentre(tilePositions[x, y]);
-                    vertices[v] = corners[0];
-                    vertices[v + 1] = corners[1];
-                    vertices[v + 2] = corners[2];
-                    vertices[v + 3] = corners[3];
+                    Quad top = AddTopFace(corners, v);
 
-
-                    triangles[t] = v;
-                    triangles[t + 1] = triangles[t + 4] = v + 1;
-                    triangles[t + 2] = triangles[t + 3] = v + 2;
-                    triangles[t + 5] = v + 3;
+                    vertices.AddRange(top.vertices);
+                    triangles.AddRange(top.triangles);
 
                     v += 4;
                     t += 6;
 
-                    Vector3 bottomRight = corners[2];
-                    Vector3 topRight = corners[3];
+                    bool north = false;
+                    bool east = false;
+                    bool south = true;
+                    bool west = false;
 
-                    vertices[v] = bottomRight;
-                    vertices[v + 1] = topRight;
-                    vertices[v + 2] = new Vector3(bottomRight.x, bottomRight.y - tileYSize, bottomRight.z);
-                    vertices[v + 3] = new Vector3(topRight.x, topRight.y - tileYSize, topRight.z);
+                    if (east)
+                    {
+                        Vector3 bottomLeft = corners[2];
+                        Vector3 topLeft = corners[3];
+                        Vector3 bottomRight = new Vector3(bottomLeft.x, bottomLeft.y - tileYSize, bottomLeft.z);
+                        Vector3 topRight = new Vector3(topLeft.x, topLeft.y - tileYSize, topLeft.z);
 
 
-                    triangles[t] = v;
-                    triangles[t + 1] = triangles[t + 4] = v + 1;
-                    triangles[t + 2] = triangles[t + 3] = v + 2;
-                    triangles[t + 5] = v + 3;
+                        vertices[v] = bottomLeft; // Bottom Left
+                        vertices[v + 1] = topLeft; // Top Left
+                        vertices[v + 2] = bottomRight; // Bottom Right
+                        vertices[v + 3] = topRight; // Top Right
 
-                    v += 4;
-                    t += 6;
 
-                    Vector3 bottomLeft = corners[0];
+                        triangles[t] = v;
+                        triangles[t + 1] = triangles[t + 4] = v + 1;
+                        triangles[t + 2] = triangles[t + 3] = v + 2;
+                        triangles[t + 5] = v + 3;
+
+                        v += 4;
+                        t += 6;
+                    }
+
+                    if (south)
+                    {
+                        Quad quad = AddSouthFace(corners, v);
+
+                        vertices.AddRange(quad.vertices);
+                        triangles.AddRange(quad.triangles);
+                        v += 4;
+                        t += 6;
+                    }
                     
-                    vertices[v] = new Vector3(bottomLeft.x, bottomLeft.y - tileYSize, bottomLeft.z);
-                    vertices[v + 1] = bottomLeft;
-                    vertices[v + 2] = new Vector3(bottomRight.x, bottomRight.y - tileYSize, bottomRight.z);
-                    vertices[v + 3] = bottomRight;
 
-                    triangles[t] = v;
-                    triangles[t + 1] = triangles[t + 4] = v + 1;
-                    triangles[t + 2] = triangles[t + 3] = v + 2;
-                    triangles[t + 5] = v + 3;
-
-                    v += 4;
-                    t += 6;
+                    
                 }
             }
 
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
+            mesh.vertices = vertices.ToArray();
+            mesh.triangles = triangles.ToArray();
 
             mesh.RecalculateNormals();
 
-            return vertices;
+            return vertices.ToArray();
+        }
+
+        private Quad AddTopFace(Vector3[] corners, int v)
+        {
+            Quad vt = new Quad();
+
+            for (int i = 0; i < vt.vertices.Length; i++)
+                vt.vertices[i] = corners[i];
+
+
+            vt.triangles[0] = v;
+            vt.triangles[1] = vt.triangles[4] = v + 1;
+            vt.triangles[2] = vt.triangles[3] = v + 2;
+            vt.triangles[5] = v + 3;
+
+            return vt;
+        }
+
+
+
+        private Quad AddSouthFace(Vector3[] corners, int v)
+        {
+            Quad vt = new Quad();
+
+            Vector3 topLeft = corners[0];
+            Vector3 topRight = corners[2];
+            Vector3 bottomLeft = new Vector3(topLeft.x, topLeft.y - tileYSize, topLeft.z);
+            Vector3 bottomRight = new Vector3(topRight.x, topRight.y - tileYSize, topRight.z);
+
+            vt.vertices[0] = bottomLeft;// Bottom Left
+            vt.vertices[1] = topLeft; // Top Left
+            vt.vertices[2] = bottomRight; // Bottom Right
+            vt.vertices[3] = topRight; // Top Right
+
+            vt.triangles[0] = v;
+            vt.triangles[1] = vt.triangles[4] = v + 1;
+            vt.triangles[2] = vt.triangles[3] = v + 2;
+            vt.triangles[5] = v + 3;
+
+            return vt;
         }
 
         // This is essentially the bounding box of the position

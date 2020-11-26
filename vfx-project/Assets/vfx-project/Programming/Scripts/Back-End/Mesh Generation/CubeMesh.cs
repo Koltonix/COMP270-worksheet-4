@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+// Source for the Triangles and Vertex assignment:
+// https://www.youtube.com/watch?v=8PlpCbxB6tY
 namespace VFX.MeshGeneration
 {
     public class Quad
@@ -47,10 +49,10 @@ namespace VFX.MeshGeneration
             Vector3 bottomLeft = new Vector3(topLeft.x, topLeft.y - tileHeight, topLeft.z);
             Vector3 bottomRight = new Vector3(topRight.x, topRight.y - tileHeight, topRight.z);
 
-            vt.vertices[0] = bottomLeft;// Bottom Left
-            vt.vertices[1] = topLeft; // Top Left
-            vt.vertices[2] = bottomRight; // Bottom Right
-            vt.vertices[3] = topRight; // Top Right
+            vt.vertices[0] = bottomLeft;
+            vt.vertices[1] = topLeft;
+            vt.vertices[2] = bottomRight;
+            vt.vertices[3] = topRight;
 
             vt.triangles = GetTriangleReversed(v);
 
@@ -66,10 +68,10 @@ namespace VFX.MeshGeneration
             Vector3 bottomLeft = new Vector3(topLeft.x, topLeft.y - tileHeight, topLeft.z);
             Vector3 bottomRight = new Vector3(topRight.x, topRight.y - tileHeight, topRight.z);
 
-            vt.vertices[0] = bottomLeft;// Bottom Left
-            vt.vertices[1] = topLeft; // Top Left
-            vt.vertices[2] = bottomRight; // Bottom Right
-            vt.vertices[3] = topRight; // Top Right
+            vt.vertices[0] = bottomLeft;
+            vt.vertices[1] = topLeft;
+            vt.vertices[2] = bottomRight;
+            vt.vertices[3] = topRight;
 
             vt.triangles = GetTriangleOrder(v);
 
@@ -85,10 +87,10 @@ namespace VFX.MeshGeneration
             Vector3 bottomRight = new Vector3(bottomLeft.x, bottomLeft.y - tileHeight, bottomLeft.z);
             Vector3 topRight = new Vector3(topLeft.x, topLeft.y - tileHeight, topLeft.z);
 
-            vt.vertices[0] = bottomLeft; // Bottom Left
-            vt.vertices[1] = topLeft; // Top Left
-            vt.vertices[2] = bottomRight; // Bottom Right
-            vt.vertices[3] = topRight; // Top Right
+            vt.vertices[0] = bottomLeft;
+            vt.vertices[1] = topLeft;
+            vt.vertices[2] = bottomRight;
+            vt.vertices[3] = topRight;
 
             vt.triangles = GetTriangleOrder(v);
 
@@ -104,10 +106,10 @@ namespace VFX.MeshGeneration
             Vector3 bottomRight = new Vector3(bottomLeft.x, bottomLeft.y - tileHeight, bottomLeft.z);
             Vector3 topRight = new Vector3(topLeft.x, topLeft.y - tileHeight, topLeft.z);
 
-            vt.vertices[0] = bottomLeft; // Bottom Left
-            vt.vertices[1] = topLeft; // Top Left
-            vt.vertices[2] = bottomRight; // Bottom Right
-            vt.vertices[3] = topRight; // Top Right
+            vt.vertices[0] = bottomLeft;
+            vt.vertices[1] = topLeft;
+            vt.vertices[2] = bottomRight;
+            vt.vertices[3] = topRight;
 
             vt.triangles = GetTriangleReversed(v);
 
@@ -117,6 +119,9 @@ namespace VFX.MeshGeneration
         private static int[] GetTriangleOrder(int v)
         {
             int[] triangles = new int[6];
+
+            // Regular Triangle Order
+            // Faces upwards
             triangles[0] = v;
             triangles[1] = triangles[4] = v + 1;
             triangles[2] = triangles[3] = v + 2;
@@ -128,39 +133,15 @@ namespace VFX.MeshGeneration
         private static int[] GetTriangleReversed(int v)
         {
             int[] triangles = new int[6];
-            // 012 213
-            //triangles[0] = 0;
-            //triangles[1] = 1;
-            //triangles[2] = 2;
-            //triangles[3] = 2;
-            //triangles[4] = 1;
-            //triangles[5] = 3;
 
-            //210 312
-            //triangles[0] = 2;
-            //triangles[1] = 1;
-            //triangles[2] = 0;
-            //triangles[3] = 3;
-            //triangles[4] = 1;
-            //triangles[5] = 2;
-
+            // Reversed Triangle Order
+            // Faces Downwards
             triangles[0] = v + 2;
             triangles[1] = v + 1;
             triangles[2] = v;
             triangles[3] = v + 3;
             triangles[4] = v + 1;
             triangles[5] = v + 2;
-
-            // v = 0
-            // v + 1 = 1
-            // v + 2 = 2
-            // v + 3 = 3
-
-            //triangles[0] = v;
-            //triangles[1] = triangles[4] = v + 1;
-            //triangles[2] = triangles[3] = v + 2;
-            //triangles[5] = v + 3;
-
 
             return triangles;
         }

@@ -8,8 +8,11 @@ The goal of this project is to procedurally generate an isometric sort of map us
 
 ### To Do
 - Create Triplinar Shader in Unity
-- Perlin Noise Map Generation
-- Mesh Generation
-- Non-Contiguous Generation
+- ~~Perlin Noise Map Generation~~
+- ~~Mesh Generation~~
+- ~~Non-Contiguous Generation~~
 - Getting each quad in an array to act as a Tile (for gameplay purposes)
 - Shader Height Map (Non-Blended)
+
+### Resources:
+- [VoxelCraft's Low Poly Voxel Trees](https://assetstore.unity.com/packages/3d/vegetation/trees/free-low-poly-boxy-stylized-trees-0-67258)

@@ -363,9 +363,8 @@ MonoBehaviour:
   tileYSize: 1
   yHeightScalar: 10
   roundedYPos: 1
-  noiseMap: {fileID: 2800000, guid: 1e0b9bec086b7164086f36365a2a3086, type: 3}
+  noiseMap: {fileID: 2800000, guid: 316033f5036041d449ad83c12556d015, type: 3}
   tileMaterial: {fileID: 2100000, guid: a6f00e1c5c1198243863142341bed685, type: 2}
-  drawDebug: 0
 --- !u!4 &1322251122
 Transform:
   m_ObjectHideFlags: 0

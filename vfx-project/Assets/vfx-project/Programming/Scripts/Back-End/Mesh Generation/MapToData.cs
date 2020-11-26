@@ -3,6 +3,20 @@ using UnityEngine;
 
 namespace VFX.MeshGeneration
 {
+
+    public struct MeshData
+    {
+        public Vector3[] vertices;
+        public int[] triangles;
+
+        public MeshData(Vector3[] v, int[] t)
+        {
+            vertices = v;
+            triangles = t;
+        }
+    }
+
+
     public class MapToData : MonoBehaviour
     {
         [Header("Tile Options")]
@@ -15,7 +29,6 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private float roundedYPos = 5.0f;
         private Vector3[,] tilePositions = null;
-        private List<Vector3> positions = new List<Vector3>();
 
         [Header("Noise")]
         [SerializeField]
@@ -24,32 +37,33 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private Material tileMaterial = null;
 
-        [SerializeField]
-        private bool drawDebug = false;
-
         delegate Quad GetQuadData(Vector3[] corners, int v, int tileHeight);
         
 
         private void Start()
         {
             tilePositions = GetPositionsFromTexture(noiseMap);
-            //Generate(, noiseMap.width, noiseMap.height);
-            GetAllVertices(tilePositions);
-
-
+            GenerateMesh(tilePositions);
         }
 
-        // Source: https://www.youtube.com/watch?v=8PlpCbxB6tY
-        private Vector3[] GetAllVertices(Vector3[,] tilePosition)
+        private void GenerateMesh(Vector3[,] positions)
         {
-
             GameObject map = new GameObject("Generated Map");
 
             Mesh mesh = null;
             map.AddComponent<MeshFilter>().mesh = mesh = new Mesh();
             map.AddComponent<MeshRenderer>().material = tileMaterial;
 
+            MeshData data = GetMeshData(positions);
 
+            mesh.vertices = data.vertices;
+            mesh.triangles = data.triangles;
+
+            mesh.RecalculateNormals();
+        }
+
+        private MeshData GetMeshData(Vector3[,] tilePosition)
+        {
             int xSize = tilePositions.GetLength(0);
             int ySize = tilePosition.GetLength(1);
 
@@ -89,7 +103,6 @@ namespace VFX.MeshGeneration
                         quadsToDraw.Add(CubeMesh.AddWestFace);
 
 
-
                     // Runs the queue of quads to be drawn
                     for (int i = 0; i < quadsToDraw.Count; i++)
                     {
@@ -105,12 +118,7 @@ namespace VFX.MeshGeneration
                 }
             }
 
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-
-            mesh.RecalculateNormals();
-
-            return vertices.ToArray();
+            return new MeshData(vertices.ToArray(), triangles.ToArray());
         }
 
         
@@ -159,29 +167,5 @@ namespace VFX.MeshGeneration
             return colour.r * yHeightScalar;
         }
         #endregion
-
-        #region Debug
-        private void OnDrawGizmos()
-        {
-            if (tilePositions != null && drawDebug)
-            {
-                foreach (Vector3 pos in tilePositions)
-                {
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawWireCube(pos - (Vector3.up * tileYSize * .5f), new Vector3(tileXSize, 1.0f, tileYSize));
-                    Gizmos.DrawSphere(pos, .1f);
-
-                    Vector3[] corners = GetVerticesFromCentre(pos);
-                    foreach (Vector3 e in corners)
-                    {
-                        Gizmos.color = Color.red;
-                        Gizmos.DrawSphere(e, .1f);
-                    }
-                }
-            }
-        }
-        #endregion
-
-
     }
 }

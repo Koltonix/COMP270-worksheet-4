@@ -3,20 +3,13 @@ using UnityEngine;
 
 namespace VFX.MeshGeneration
 {
-    public class Quad
-    {
-        public Vector3[] vertices = new Vector3[4];
-        public int[] triangles = new int[6];
-    }
-
-
     public class MapToData : MonoBehaviour
     {
         [Header("Tile Options")]
         [SerializeField]
-        private float tileXSize = 1.0f;
+        private int tileXSize = 1;
         [SerializeField]
-        private float tileYSize = 1.0f;
+        private int tileYSize = 1;
         [SerializeField]
         private float yHeightScalar = 1.0f;
         [SerializeField]
@@ -34,7 +27,7 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private bool drawDebug = false;
 
-        delegate Quad GetQuadData(Vector3[] corners, int v);
+        delegate Quad GetQuadData(Vector3[] corners, int v, int tileHeight);
         
 
         private void Start()
@@ -45,25 +38,6 @@ namespace VFX.MeshGeneration
 
 
         }
-
-        // Source: https://catlikecoding.com/unity/tutorials/procedural-grid/
-        public void Generate(Vector3[] vertices, int xSize, int ySize)
-        {
-        //    Debug.Log(vertices.Length);
-
-        //    GameObject map = new GameObject("Generated Map");
-
-        //    Mesh mesh = null;
-        //    map.AddComponent<MeshFilter>().mesh = mesh = new Mesh();
-        //    map.AddComponent<MeshRenderer>().material = tileMaterial;
-
-        //    mesh.vertices = vertices;
-
-        //    Debug.Log(triangles.Length);
-        //    mesh.triangles = triangles;
-        //    mesh.RecalculateNormals();
-        }
-
 
         // Source: https://www.youtube.com/watch?v=8PlpCbxB6tY
         private Vector3[] GetAllVertices(Vector3[,] tilePosition)
@@ -93,51 +67,31 @@ namespace VFX.MeshGeneration
                     quadsToDraw = new List<GetQuadData>();
                     Vector3[] corners = GetVerticesFromCentre(tilePositions[x, y]);
 
-                    quadsToDraw.Add(AddTopFace);
+                    // Add the top faces to the queue
+                    quadsToDraw.Add(CubeMesh.AddTopFace);
   
                     bool north = false;
                     bool east = false;
                     bool south = true;
                     bool west = false;
 
-
                     if (south)
-                        quadsToDraw.Add(AddSouthFace);
+                        quadsToDraw.Add(CubeMesh.AddSouthFace);
+
+                    if (east)
+                        quadsToDraw.Add(CubeMesh.AddEastFace);
 
                     // Runs the queue of quads to be drawn
                     for (int i = 0; i < quadsToDraw.Count; i++)
                     {
-                        Quad q = quadsToDraw[i].Invoke(corners, v);
+                        Quad q = quadsToDraw[i].Invoke(corners, v, tileYSize);
 
                         vertices.AddRange(q.vertices);
                         triangles.AddRange(q.triangles);
 
                         v += 4;
                         t += 6;
-                    }
-
-                    if (east)
-                    {
-                        Vector3 bottomLeft = corners[2];
-                        Vector3 topLeft = corners[3];
-                        Vector3 bottomRight = new Vector3(bottomLeft.x, bottomLeft.y - tileYSize, bottomLeft.z);
-                        Vector3 topRight = new Vector3(topLeft.x, topLeft.y - tileYSize, topLeft.z);
-
-
-                        vertices[v] = bottomLeft; // Bottom Left
-                        vertices[v + 1] = topLeft; // Top Left
-                        vertices[v + 2] = bottomRight; // Bottom Right
-                        vertices[v + 3] = topRight; // Top Right
-
-
-                        triangles[t] = v;
-                        triangles[t + 1] = triangles[t + 4] = v + 1;
-                        triangles[t + 2] = triangles[t + 3] = v + 2;
-                        triangles[t + 5] = v + 3;
-
-                        v += 4;
-                        t += 6;
-                    }
+                    }    
 
                 }
             }
@@ -150,45 +104,7 @@ namespace VFX.MeshGeneration
             return vertices.ToArray();
         }
 
-        private Quad AddTopFace(Vector3[] corners, int v)
-        {
-            Quad vt = new Quad();
-
-            for (int i = 0; i < vt.vertices.Length; i++)
-                vt.vertices[i] = corners[i];
-
-
-            vt.triangles[0] = v;
-            vt.triangles[1] = vt.triangles[4] = v + 1;
-            vt.triangles[2] = vt.triangles[3] = v + 2;
-            vt.triangles[5] = v + 3;
-
-            return vt;
-        }
-
-
-
-        private Quad AddSouthFace(Vector3[] corners, int v)
-        {
-            Quad vt = new Quad();
-
-            Vector3 topLeft = corners[0];
-            Vector3 topRight = corners[2];
-            Vector3 bottomLeft = new Vector3(topLeft.x, topLeft.y - tileYSize, topLeft.z);
-            Vector3 bottomRight = new Vector3(topRight.x, topRight.y - tileYSize, topRight.z);
-
-            vt.vertices[0] = bottomLeft;// Bottom Left
-            vt.vertices[1] = topLeft; // Top Left
-            vt.vertices[2] = bottomRight; // Bottom Right
-            vt.vertices[3] = topRight; // Top Right
-
-            vt.triangles[0] = v;
-            vt.triangles[1] = vt.triangles[4] = v + 1;
-            vt.triangles[2] = vt.triangles[3] = v + 2;
-            vt.triangles[5] = v + 3;
-
-            return vt;
-        }
+        
 
         // This is essentially the bounding box of the position
         private Vector3[] GetVerticesFromCentre(Vector3 pos)

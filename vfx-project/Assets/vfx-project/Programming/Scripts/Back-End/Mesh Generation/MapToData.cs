@@ -30,85 +30,80 @@ namespace VFX.MeshGeneration
         private void Start()
         {
             tilePositions = GetPositionsFromTexture(noiseMap);
-            CreateTiles();
-            
+            //Generate(, noiseMap.width, noiseMap.height);
+            GetAllVertices(tilePositions);
+
+
         }
 
         // Source: https://catlikecoding.com/unity/tutorials/procedural-grid/
-        private void CreateTiles()
+        public void Generate(Vector3[] vertices, int xSize, int ySize)
         {
+        //    Debug.Log(vertices.Length);
 
-            GameObject parent = new GameObject("Map");
-            foreach (Vector3 pos in tilePositions)
-            {
-                Mesh plane = CreateCube(pos);
-                GameObject tile = new GameObject("Tile");
+        //    GameObject map = new GameObject("Generated Map");
 
-                tile.AddComponent<MeshFilter>().mesh = plane;
-                tile.AddComponent<MeshRenderer>().material = tileMaterial;
+        //    Mesh mesh = null;
+        //    map.AddComponent<MeshFilter>().mesh = mesh = new Mesh();
+        //    map.AddComponent<MeshRenderer>().material = tileMaterial;
 
-                tile.transform.position = pos;
-                tile.transform.SetParent(parent.transform);
-            }
+        //    mesh.vertices = vertices;
+
+        //    Debug.Log(triangles.Length);
+        //    mesh.triangles = triangles;
+        //    mesh.RecalculateNormals();
         }
 
-        // Source: http://ilkinulas.github.io/development/unity/2016/04/30/cube-mesh-in-unity3d.html
-        // Source: https://gist.github.com/prucha/866b9535d525adc984c4fe883e73a6c7
-        public Mesh CreateCube(Vector3 centrePos)
+
+        // Source: https://www.youtube.com/watch?v=8PlpCbxB6tY
+        private Vector3[] GetAllVertices(Vector3[,] tilePosition)
         {
-            Mesh plane = new Mesh();
 
-            float width = tileXSize * .5f;
-            float height = tileYSize * .5f;
-            float length = tileXSize * .5f;
+            GameObject map = new GameObject("Generated Map");
 
-            Vector3[] coords =
+            Mesh mesh = null;
+            map.AddComponent<MeshFilter>().mesh = mesh = new Mesh();
+            map.AddComponent<MeshRenderer>().material = tileMaterial;
+
+
+            int xSize = tilePositions.GetLength(0);
+            int ySize = tilePosition.GetLength(1);
+
+            Vector3[] vertices = new Vector3[xSize * ySize * 4];
+            Vector3[] normals = new Vector3[vertices.Length];
+            int[] triangles = new int[xSize * ySize * 6];
+
+            int v = 0;
+            int t = 0;
+
+            for (int y = 0; y < ySize; y++)
             {
-                new Vector3(-length, -width, height),
-                new Vector3(length, -width, height),
-                new Vector3(length, -width, -height),
-                new Vector3(-length, -width, -height),
+                for (int x = 0; x < xSize; x++)
+                {
 
-                new Vector3(-length, width, height),
-                new Vector3(length, width, height),
-                new Vector3(length, width, -height),
-                new Vector3(-length, width, -height)
-            };
-            
-            Vector3[] vertices =
-            {
-                coords[0], coords[1], coords[2], coords[3], // Bottom
-	            coords[7], coords[4], coords[0], coords[3], // Left
-	            coords[4], coords[5], coords[1], coords[0], // Front
-	            coords[6], coords[7], coords[3], coords[2], // Back
-	            coords[5], coords[6], coords[2], coords[1], // Right
-	            coords[7], coords[6], coords[5], coords[4]  // Top
-            };
+                    Vector3[] corners = GetVerticesFromCentre(tilePositions[x, y]);
+                    vertices[v] = corners[0];
+                    vertices[v + 1] = corners[1];
+                    vertices[v + 2] = corners[2];
+                    vertices[v + 3] = corners[3];
 
-            Vector3[] normals =
-            {
-                Vector3.down, Vector3.down, Vector3.down, Vector3.down,
-                Vector3.left, Vector3.left, Vector3.left, Vector3.left,
-                Vector3.forward, Vector3.forward, Vector3.forward, Vector3.forward,
-                Vector3.back, Vector3.back, Vector3.back, Vector3.back,
-                Vector3.right, Vector3.right, Vector3.right, Vector3.right,
-                Vector3.up, Vector3.up, Vector3.up, Vector3.up
-            };
 
-            int[] tris =
-            {
-	            7, 5, 4,        7, 6, 5,        // Left
-	            11, 9, 8,       11, 10, 9,      // Front
-	            15, 13, 12,     15, 14, 13,     // Back
-	            19, 17, 16,     19, 18, 17,	    // Right
-	            23, 21, 20,     23, 22, 21,	    // Top
-            };
+                    triangles[t] = v;
+                    triangles[t + 1] = triangles[t + 4] = v + 1;
+                    triangles[t + 2] = triangles[t + 3] = v + 2;
+                    triangles[t + 5] = v + 3;
 
-            plane.vertices = vertices;
-            plane.triangles = tris;
-            plane.normals = normals;
+                    v += 4;
+                    t += 6;
+                }
+            }
 
-            return plane;
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+
+            mesh.RecalculateNormals();
+
+            return vertices;
         }
 
         // This is essentially the bounding box of the position

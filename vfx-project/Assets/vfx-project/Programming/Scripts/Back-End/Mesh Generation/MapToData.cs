@@ -69,17 +69,26 @@ namespace VFX.MeshGeneration
 
                     // Add the top faces to the queue
                     quadsToDraw.Add(CubeMesh.AddTopFace);
+                    quadsToDraw.Add(CubeMesh.AddBottomFace);
   
-                    bool north = false;
-                    bool east = false;
+                    bool north = true;
+                    bool east = true;
                     bool south = true;
-                    bool west = false;
+                    bool west = true;
+
+                    if (north)
+                        quadsToDraw.Add(CubeMesh.AddNorthFace);
+
+                    if (east)
+                        quadsToDraw.Add(CubeMesh.AddEastFace);
 
                     if (south)
                         quadsToDraw.Add(CubeMesh.AddSouthFace);
 
-                    if (east)
-                        quadsToDraw.Add(CubeMesh.AddEastFace);
+                    if (west)
+                        quadsToDraw.Add(CubeMesh.AddWestFace);
+
+
 
                     // Runs the queue of quads to be drawn
                     for (int i = 0; i < quadsToDraw.Count; i++)

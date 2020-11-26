@@ -34,6 +34,9 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private bool drawDebug = false;
 
+        delegate Quad GetQuadData(Vector3[] corners, int v);
+        
+
         private void Start()
         {
             tilePositions = GetPositionsFromTexture(noiseMap);
@@ -77,8 +80,8 @@ namespace VFX.MeshGeneration
             int ySize = tilePosition.GetLength(1);
 
             List<Vector3> vertices = new List<Vector3>();
-            //Vector3[] normals = new Vector3[vertices.Length];
             List<int> triangles = new List<int>();
+            List<GetQuadData> quadsToDraw = new List<GetQuadData>();
 
             int v = 0;
             int t = 0;
@@ -87,20 +90,31 @@ namespace VFX.MeshGeneration
             {
                 for (int x = 0; x < xSize; x++)
                 {
-
+                    quadsToDraw = new List<GetQuadData>();
                     Vector3[] corners = GetVerticesFromCentre(tilePositions[x, y]);
-                    Quad top = AddTopFace(corners, v);
 
-                    vertices.AddRange(top.vertices);
-                    triangles.AddRange(top.triangles);
-
-                    v += 4;
-                    t += 6;
-
+                    quadsToDraw.Add(AddTopFace);
+  
                     bool north = false;
                     bool east = false;
                     bool south = true;
                     bool west = false;
+
+
+                    if (south)
+                        quadsToDraw.Add(AddSouthFace);
+
+                    // Runs the queue of quads to be drawn
+                    for (int i = 0; i < quadsToDraw.Count; i++)
+                    {
+                        Quad q = quadsToDraw[i].Invoke(corners, v);
+
+                        vertices.AddRange(q.vertices);
+                        triangles.AddRange(q.triangles);
+
+                        v += 4;
+                        t += 6;
+                    }
 
                     if (east)
                     {
@@ -125,18 +139,6 @@ namespace VFX.MeshGeneration
                         t += 6;
                     }
 
-                    if (south)
-                    {
-                        Quad quad = AddSouthFace(corners, v);
-
-                        vertices.AddRange(quad.vertices);
-                        triangles.AddRange(quad.triangles);
-                        v += 4;
-                        t += 6;
-                    }
-                    
-
-                    
                 }
             }
 

@@ -69,9 +69,9 @@ namespace VFX.MeshGeneration
             int xSize = tilePositions.GetLength(0);
             int ySize = tilePosition.GetLength(1);
 
-            Vector3[] vertices = new Vector3[xSize * ySize * 4];
+            Vector3[] vertices = new Vector3[xSize * ySize * 4 * 3];
             Vector3[] normals = new Vector3[vertices.Length];
-            int[] triangles = new int[xSize * ySize * 6];
+            int[] triangles = new int[xSize * ySize * 6 * 3];
 
             int v = 0;
             int t = 0;
@@ -87,6 +87,38 @@ namespace VFX.MeshGeneration
                     vertices[v + 2] = corners[2];
                     vertices[v + 3] = corners[3];
 
+
+                    triangles[t] = v;
+                    triangles[t + 1] = triangles[t + 4] = v + 1;
+                    triangles[t + 2] = triangles[t + 3] = v + 2;
+                    triangles[t + 5] = v + 3;
+
+                    v += 4;
+                    t += 6;
+
+                    Vector3 bottomRight = corners[2];
+                    Vector3 topRight = corners[3];
+
+                    vertices[v] = bottomRight;
+                    vertices[v + 1] = topRight;
+                    vertices[v + 2] = new Vector3(bottomRight.x, bottomRight.y - tileYSize, bottomRight.z);
+                    vertices[v + 3] = new Vector3(topRight.x, topRight.y - tileYSize, topRight.z);
+
+
+                    triangles[t] = v;
+                    triangles[t + 1] = triangles[t + 4] = v + 1;
+                    triangles[t + 2] = triangles[t + 3] = v + 2;
+                    triangles[t + 5] = v + 3;
+
+                    v += 4;
+                    t += 6;
+
+                    Vector3 bottomLeft = corners[0];
+                    
+                    vertices[v] = new Vector3(bottomLeft.x, bottomLeft.y - tileYSize, bottomLeft.z);
+                    vertices[v + 1] = bottomLeft;
+                    vertices[v + 2] = new Vector3(bottomRight.x, bottomRight.y - tileYSize, bottomRight.z);
+                    vertices[v + 3] = bottomRight;
 
                     triangles[t] = v;
                     triangles[t + 1] = triangles[t + 4] = v + 1;

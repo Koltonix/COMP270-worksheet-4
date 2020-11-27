@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace VFX.MeshGeneration
 {
@@ -30,6 +31,8 @@ namespace VFX.MeshGeneration
 
         // Used to assign an even to a quad direction to draw
         delegate Quad GetQuadData(Vector3[] corners, int v, int tileHeight);
+
+        public TextMeshPro textPrefab = null;
 
         private void Start()
         {
@@ -89,18 +92,17 @@ namespace VFX.MeshGeneration
                     Vector3[] corners = GetVerticesFromCentre(tilePositions[x, y]);
 
                     string adjacency = GetIfAdjacentTilesAreEqualHeight(x, y);
-                    Debug.Log(adjacency);
 
                     // Add the top faces to the queue
                     quadsToDraw.Add(CubeMesh.AddTopFace);
-                    quadsToDraw.Add(CubeMesh.AddBottomFace);
+                    //quadsToDraw.Add(CubeMesh.AddBottomFace);
 
                     // 1 Refers to a tile being on a different height
                     // 0 Refers to a tile being on the same height
-                    bool north = true;
-                    bool east = true;
-                    bool south = true;
-                    bool west = true;
+                    bool north = adjacency[0] == '1';
+                    bool east = adjacency[1] == '1';
+                    bool south = adjacency[2] == '1';
+                    bool west = adjacency[3] == '1';
 
                     if (north)
                         quadsToDraw.Add(CubeMesh.AddNorthFace);
@@ -179,28 +181,21 @@ namespace VFX.MeshGeneration
             // Goes North, East, South and West
             // Loop also goes in this order
             char[] adjacency = { '0', '0', '0', '0' };
-            for (int i = -1, index = 0; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    // Making sure it is within the array bounds
-                    // Making sure exclude corners with the abs check
-                    if (x + i < 0 || y + j < 0 || x + i >= width || y + j >= height || Mathf.Abs(i) == Mathf.Abs(j))
-                        continue;
 
-                    // Tile adjacent is on a different height
-                    if (tilePositions[x, y].y != tilePositions[x + i, y + j].y)
-                    {
-                        adjacency[index] = '1';
-                        index++;
-                    }
 
-                    // Tile adjacent is equal height
-                    else
-                        adjacency[index] = '0';
+            // Did try and make it in a for loop, but it iterated in the wrong order
+            if (y + 1 < height && tilePositions[x, y].y > tilePositions[x, y + 1].y)
+                adjacency[0] = '1';
 
-                }
-            }
+            if (x + 1 < width && tilePositions[x, y].y > tilePositions[x + 1, y].y)
+                adjacency[1] = '1';
+
+            if (y - 1 >= 0 && tilePositions[x, y].y > tilePositions[x, y - 1].y)
+                adjacency[2] = '1';
+
+            if (x - 1 >= 0 && tilePositions[x, y].y > tilePositions[x - 1, y].y)
+                adjacency[3] = '1';
+
 
             return new string(adjacency);
         }

@@ -8,6 +8,14 @@ using UnityEngine;
 
 namespace VFX.Gameplay
 {
+    /// <summary>
+    /// Used to store the Tile data for the entire grid. This will mainly be 
+    /// used to store game logic.
+    /// 
+    /// **NOTE:** This does not handle deleting the object if you decide to 
+    /// null it, so the class storying this is reponsible for the deletion
+    /// of the GameObject from memory.
+    /// </summary>
     [Serializable]
     public class Tile
     {

@@ -11,6 +11,10 @@ namespace VFX.Gameplay
         private Tile[,] tiles = null;
         private Vector2 tileSize = Vector2.one;
 
+        [Header("GameObject")]
+        [SerializeField]
+        private GameObject[] treePrefabs;
+
         public void OnClick()
         {
             if (hit.collider != null && tiles != null)
@@ -18,9 +22,10 @@ namespace VFX.Gameplay
                 Tile tile = PositionToTile(hit.point);
                 if (!tile.IsOccupied())
                 {
-                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    sphere.transform.position = new Vector3(tile.position.x, tile.position.y + .25f, tile.position.z);
-                    tile.SetHeldObject(sphere);
+                    GameObject tree = Instantiate(treePrefabs[Random.Range(0, treePrefabs.Length)]);
+                    tree.transform.position = tile.position;
+                    tree.transform.localScale *= 2;
+                    tile.SetHeldObject(tree);
                 }
 
                 else if (tile.IsOccupied())

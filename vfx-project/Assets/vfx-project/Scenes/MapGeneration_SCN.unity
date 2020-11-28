@@ -301,6 +301,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 759276f968c116b4ea116f996e55f115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  treePrefabs:
+  - {fileID: 1000011901478696, guid: 7de4ed2e68b8f6b41bf83021ed49741e, type: 3}
+  - {fileID: 1000013574824664, guid: 823e5f2073f8f044d9f3208c1125dd73, type: 3}
+  - {fileID: 1000014210774634, guid: 62667ccc8d0e7e84ba7bfc30177ea4cd, type: 3}
+  - {fileID: 1000010061563708, guid: 666ec3b7bb72c254495bd598576ab332, type: 3}
+  - {fileID: 173180, guid: 15e25f77f96ff474eb0e4f235d1338fe, type: 3}
+  - {fileID: 141540, guid: 82f258a1b46e8b640908bfe7ad2de692, type: 3}
+  - {fileID: 198302, guid: 7561f0cfc3da4a641beec58b15914c4b, type: 3}
+  - {fileID: 186646, guid: 81871a7d538556b4bac9f2ce0ee55b09, type: 3}
 --- !u!4 &619990233
 Transform:
   m_ObjectHideFlags: 0
@@ -462,6 +471,7 @@ MonoBehaviour:
   tileYSize: 1
   noiseMapScalar: 10
   roundedYPos: 1
+  drawOuterFaces: 1
   noiseMap: {fileID: 2800000, guid: 316033f5036041d449ad83c12556d015, type: 3}
   tileMaterial: {fileID: 2100000, guid: a6f00e1c5c1198243863142341bed685, type: 2}
   onBoardCompletion:

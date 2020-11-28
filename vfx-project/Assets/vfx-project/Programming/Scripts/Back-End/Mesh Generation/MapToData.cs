@@ -21,6 +21,8 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private float roundedYPos = 5.0f;
         private Vector3[,] tilePositions = null;
+        [SerializeField]
+        private bool drawOuterFaces = false;
         [Space]
 
         [Header("Noise and Material")]
@@ -111,6 +113,8 @@ namespace VFX.MeshGeneration
                     bool south = adjacency[2] == '1';
                     bool west = adjacency[3] == '1';
 
+                    bool isEdge = (x == 0 || y == 0);
+
                     if (north)
                         quadsToDraw.Add(CubeMesh.AddNorthFace);
 
@@ -189,18 +193,20 @@ namespace VFX.MeshGeneration
             // Loop also goes in this order
             char[] adjacency = { '0', '0', '0', '0' };
 
+            // Allows a face to be drawn on the edge
+            bool onEdge = (x == 0 || y == 0 || x == width - 1 || y == height - 1) && drawOuterFaces;
 
             // Did try and make it in a for loop, but it iterated in the wrong order
-            if (y + 1 < height && tilePositions[x, y].y > tilePositions[x, y + 1].y)
+            if (y + 1 < height && tilePositions[x, y].y > tilePositions[x, y + 1].y || onEdge && y + 1 > height)
                 adjacency[0] = '1';
 
-            if (x + 1 < width && tilePositions[x, y].y > tilePositions[x + 1, y].y)
+            if (x + 1 < width && tilePositions[x, y].y > tilePositions[x + 1, y].y || onEdge && x + 1 > width)
                 adjacency[1] = '1';
 
-            if (y - 1 >= 0 && tilePositions[x, y].y > tilePositions[x, y - 1].y)
+            if (y - 1 >= 0 && tilePositions[x, y].y > tilePositions[x, y - 1].y || onEdge && y - 1 < 0)
                 adjacency[2] = '1';
 
-            if (x - 1 >= 0 && tilePositions[x, y].y > tilePositions[x - 1, y].y)
+            if (x - 1 >= 0 && tilePositions[x, y].y > tilePositions[x - 1, y].y || onEdge && x - 1 < 0)
                 adjacency[3] = '1';
 
 

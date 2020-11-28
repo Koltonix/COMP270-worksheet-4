@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using VFX.Events;
 
 namespace VFX.MeshGeneration
 {
@@ -29,15 +29,21 @@ namespace VFX.MeshGeneration
         [SerializeField]
         private Material tileMaterial = null;
 
+        [Header("Events")]
+        [SerializeField]
+        private Vector3MDEvent onBoardCompletion;
+        [SerializeField]
+        private Vector2Event onTileSize;
         // Used to assign an even to a quad direction to draw
         delegate Quad GetQuadData(Vector3[] corners, int v, int tileHeight);
-
-        public TextMeshPro textPrefab = null;
 
         private void Start()
         {
             tilePositions = GetPositionsFromTexture(noiseMap);
             GenerateMesh(tilePositions);
+
+            onTileSize?.Invoke(new Vector2(tileXSize, tileYSize));
+            onBoardCompletion?.Invoke(tilePositions);
         }
 
         /// <summary>
@@ -62,6 +68,7 @@ namespace VFX.MeshGeneration
             mesh.triangles = data.triangles;
 
             mesh.RecalculateNormals();
+            map.AddComponent<MeshCollider>();
         }
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace VFX.InputSystem
         [SerializeField]
         protected LayerMask mask;
         [SerializeField]
-        protected float rayDistance = Mathf.Infinity;
+        protected float rayDistance = 500.0f;
         protected RaycastHit hit;
         protected Ray ray;
 

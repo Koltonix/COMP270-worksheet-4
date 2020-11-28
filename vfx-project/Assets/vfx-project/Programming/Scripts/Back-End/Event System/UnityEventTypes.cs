@@ -14,4 +14,6 @@ namespace VFX.Events
     public class FloatEvent : UnityEvent<float> { };
     [Serializable]
     public class StringEvent : UnityEvent<string> { };
+    [Serializable]
+    public class Vector3MDEvent : UnityEvent<Vector3[,]> { };
 }

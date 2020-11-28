@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿//////////////////////////////////////////////////
+// Christopher Robertson 2020.
+// https://github.com/Koltonix
+// Copyright (c) 2020. All rights reserved.
+//////////////////////////////////////////////////
+using UnityEngine;
 
 namespace VFX.Gameplay
 {
@@ -11,9 +16,13 @@ namespace VFX.Gameplay
         private Tile[,] tiles = null;
         private Vector2 tileSize = Vector2.one;
 
-        [Header("GameObject")]
+        [Header("Spawn Object")]
         [SerializeField]
         private GameObject[] treePrefabs;
+        [SerializeField]
+        private float minScale = 0.25f;
+        [SerializeField]
+        private float maxScale = 1.0f;
 
         public void OnClick()
         {
@@ -24,7 +33,7 @@ namespace VFX.Gameplay
                 {
                     GameObject tree = Instantiate(treePrefabs[Random.Range(0, treePrefabs.Length)]);
                     tree.transform.position = tile.position;
-                    tree.transform.localScale *= 2;
+                    tree.transform.localScale *= Random.Range(minScale, maxScale);
                     tile.SetHeldObject(tree);
                 }
 

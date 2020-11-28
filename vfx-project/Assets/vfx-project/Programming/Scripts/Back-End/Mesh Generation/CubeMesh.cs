@@ -1,9 +1,4 @@
-﻿//////////////////////////////////////////////////
-// Christopher Robertson 2020.
-// https://github.com/Koltonix
-// Copyright (c) 2020. All rights reserved.
-//////////////////////////////////////////////////
-using UnityEngine;
+﻿using UnityEngine;
 
 // Source for the Triangles and Vertex assignment:
 // https://www.youtube.com/watch?v=8PlpCbxB6tY

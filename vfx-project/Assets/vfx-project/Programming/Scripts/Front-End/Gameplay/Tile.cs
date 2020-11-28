@@ -1,4 +1,9 @@
-﻿using System;
+﻿//////////////////////////////////////////////////
+// Christopher Robertson 2020.
+// https://github.com/Koltonix
+// Copyright (c) 2020. All rights reserved.
+//////////////////////////////////////////////////
+using System;
 using UnityEngine;
 
 namespace VFX.Gameplay

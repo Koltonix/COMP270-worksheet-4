@@ -193,10 +193,10 @@ namespace VFX.MeshGeneration
             bool onEdge = (x == 0 || y == 0 || x == width - 1 || y == height - 1) && drawOuterFaces;
 
             // Did try and make it in a for loop, but it iterated in the wrong order
-            if (y + 1 < height && tilePositions[x, y].y > tilePositions[x, y + 1].y || onEdge && y + 1 > height)
+            if (y + 1 < height && tilePositions[x, y].y > tilePositions[x, y + 1].y || onEdge && y + 1 >= height)
                 adjacency[0] = '1';
 
-            if (x + 1 < width && tilePositions[x, y].y > tilePositions[x + 1, y].y || onEdge && x + 1 > width)
+            if (x + 1 < width && tilePositions[x, y].y > tilePositions[x + 1, y].y || onEdge && x + 1 >= width)
                 adjacency[1] = '1';
 
             if (y - 1 >= 0 && tilePositions[x, y].y > tilePositions[x, y - 1].y || onEdge && y - 1 < 0)

@@ -34,7 +34,7 @@ ASSET by '[Free! Low Poly Boxy-Stylized Trees](https://assetstore.unity.com/pack
 ### Perlin Noise and Image to Mesh Generation:
 |                                                             |
 |-------------------------------------------------------------|
-|![Perlin Noise](images/information/perlin-noise-settings.png)|
+|![Perlin Noise](images/information/perlin-noise-settings.PNG)|
 
 - To create the perlin noise you can get the generator by right clicking in the project then going to 'Create->ScriptableObjects->Tools->PerlinNoiseGenerator'. 
 - You can then customise the settings to your desired effect. 
@@ -42,7 +42,7 @@ ASSET by '[Free! Low Poly Boxy-Stylized Trees](https://assetstore.unity.com/pack
 
 |                                                      |                                                      |
 |------------------------------------------------------|------------------------------------------------------|
-|![Read Write](images/information/read-and-write.png)  |![Script](images/information/drag-and-drop.png)       |
+|![Read Write](images/information/read-and-write.PNG)  |![Script](images/information/drag-and-drop.PNG)       |
 
 - **IMPORTANT:** With your perlin noise or custom image you will need to **enable Read/Write** to ensure that the file can be read by the script to generate the mesh.
 - You can then add the MapToData class to any GameObject in the scene and assign it your image along with any customisation you desired.
@@ -51,7 +51,7 @@ ASSET by '[Free! Low Poly Boxy-Stylized Trees](https://assetstore.unity.com/pack
 
 |                                                      |                                                      |
 |------------------------------------------------------|------------------------------------------------------|
-|![Triplanar](images/information/triplanar.png)        |![Water](images/information/water.png)                |
+|![Triplanar](images/information/triplanar.PNG)        |![Water](images/information/water.PNG)                |
 #### Triplanar Shader
 - The Triplanar shader has 3 colours which equate to the Vector3.Left, Vector.Backwards and Vector3.Up directions in Engine due to the orientation of my camera.
 - **NOTE:** This shader currently only works for these three directions as the other sides are just black.

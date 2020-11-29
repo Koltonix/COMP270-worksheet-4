@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ground_MAT
+  m_Name: Blue_MAT
   m_Shader: {fileID: -6465566751694194690, guid: da084aff2a40aff4ab48bbce73ac13bd,
     type: 3}
   m_ShaderKeywords: 
@@ -92,6 +92,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - backward_colour: {r: 0.34042364, g: 0.46920738, b: 0.9622642, a: 0}
     - forward_colour: {r: 0.9607843, g: 0.43529412, b: 0.53333336, a: 0}
+    - left_colour: {r: 0.13950695, g: 0.29656196, b: 0.8962264, a: 0}
     - right_colour: {r: 0.9490196, g: 0.28627452, b: 0.4, a: 0}
-    - up_colour: {r: 1, g: 0.9019608, b: 0.5058824, a: 0}
+    - up_colour: {r: 0.25467247, g: 0.39041397, b: 0.9150943, a: 0}

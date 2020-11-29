@@ -28,7 +28,7 @@
 - [Colour Inspiration from Monument Valley](https://play.google.com/store/apps/details?id=com.ustwo.monumentvalley&hl=en_GB&gl=US)
 
 ## Acknowledgements
-ASSET by '[Free! Low Poly Boxy-Stylized Trees](https://assetstore.unity.com/packages/3d/vegetation/trees/free-low-poly-boxy-stylized-trees-0-67258)' licenced under Standard Terms of the Asset Store End User License Agreement (https://unity3d.com/legal/as_terms, Appendix A) as an "Extension Asset"
+ASSET by '[VoxelCraft](https://assetstore.unity.com/packages/3d/vegetation/trees/free-low-poly-boxy-stylized-trees-0-67258)' licenced under Standard Terms of the Asset Store End User License Agreement (https://unity3d.com/legal/as_terms, Appendix A) as an "Extension Asset"
 
 ## Instructions
 ### Perlin Noise and Image to Mesh Generation:
@@ -48,6 +48,7 @@ ASSET by '[Free! Low Poly Boxy-Stylized Trees](https://assetstore.unity.com/pack
 - You can then add the MapToData class to any GameObject in the scene and assign it your image along with any customisation you desired.
 - When you run you will see the mesh generated.
 - **NOTE:** Currently you cannot saved the mesh outside of runtime.
+- **NOTE:** The water is not generated at runtime and has to be placed manually, or extended with another script.
 
 |                                                      |                                                      |
 |------------------------------------------------------|------------------------------------------------------|
